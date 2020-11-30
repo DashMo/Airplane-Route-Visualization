@@ -1,10 +1,10 @@
 #include "airport.h"
-
-Airport::Airport(double longitude, double latitude,std::string airportName){
+//#include <cmath>
+Airport::Airport(double longitude, double latitude,std::string airportName,unsigned width, unsigned height){
     lat = latitude;
     lon = longitude;
-    x = getX(longitude,latitude); //converts spherical latitude to cartesian x
-    y = getY(longitdue,latitude); //converts spherical longitude to cartesian y
+    x = getX(longitude,width); //converts spherical coordinates to cartesian x
+    y = getY(latitude,height,width); //converts spherical coordinates to cartesian y
     name = airportName;
     size = 0;//initially has no routes set
 }
