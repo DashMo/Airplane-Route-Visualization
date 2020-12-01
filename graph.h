@@ -1,14 +1,17 @@
 #pragma once
 #include "routes.h"
 #include "airport.h"
-#include <std::map>
-#include <std::vector>
-
+#include <map>
+#include<unordered_map>
+#include <vector>
+#include <string>
+#include "cs225/PNG.h"
+using std::string;
 
 class Graph {
 
     public:
-        Graph(Routes edges[], int n, int N); //default constructor, may modify to take in two files
+        Graph(string &airportinfo, string &routesinfo, string &mapname); //constructor takes file names for airport database, routes database, and mercator map image
         void addEdge();
         void addVertex();
         void displayMap();
@@ -16,6 +19,7 @@ class Graph {
 
     private:
         //edge holds name of airport and name of destination airport, graph implementations and traversals, adjacency list
-        Airport **head;
-        std::map<std::string, Airport> airportMap;
-}
+        std::unordered_map<int, Airport> airportMap; //hash map that maps airport name to airport object
+        std::unordered_map<std::string, std::vector<int>> cities; //hash map that maps city name to vector of airport id's within that city
+        PNG map; //will hold mercator map
+};

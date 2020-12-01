@@ -1,7 +1,7 @@
 #pragma once
 #include "routes.h"
 #include <vector>
-
+#include <string>
 class Airport{
     public:
         Airport(double longitude, double latitude,std::string airportName,unsigned width, unsigned height); //constructs airport based on inputted longitude and latitude, needs width and height of Mercator png to calculate x and y coordinates
@@ -14,5 +14,6 @@ class Airport{
         double lat; //latitude
         int size; //number of incoming routes (to keep track of popularity of airport)
         std::string name; //name of airport
+        Airport* prev;
 
 }
