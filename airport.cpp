@@ -1,6 +1,10 @@
 #include "airport.h"
-#include <cmath>
+#include <cmath>//
 #include <string>
+
+double getX(double lon, int width);
+double getY(double lat, int height, int width);
+
 Airport::Airport(double longitude, double latitude,std::string airportName,unsigned width, unsigned height){
     lat = latitude;
     lon = longitude;

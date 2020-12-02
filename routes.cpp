@@ -2,13 +2,6 @@
 #include <cmath>
 
 
-Routes::Routes(int start, int end, double lat1, double lon1, double lat2, double lon2){
-    source = start; //stores names of source and destination airports
-    dest = end;
-    dist = getDist(lat1,lon1,lat2,lon2); //edge weight is the distance between the two airports
-}
-
-
 //https://stackoverflow.com/questions/27126714/c-latitude-and-longitude-distance-calculator
 double toRad(double degree) {
     return degree/180 * 3.14159265359;
@@ -23,3 +16,12 @@ double getDist(double lat1, double long1, double lat2, double long2) {
     dist = 6371 * dist;
     return dist;
 }
+
+
+Routes::Routes(int start, int end, double lat1, double lon1, double lat2, double lon2){
+    source = start; //stores names of source and destination airports
+    dest = end;
+    dist = getDist(lat1,lon1,lat2,lon2); //edge weight is the distance between the two airports
+}
+
+
