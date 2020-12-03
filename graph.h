@@ -19,7 +19,7 @@ class Graph {
 
     private:
         //edge holds name of airport and name of destination airport, graph implementations and traversals, adjacency list
-        std::unordered_map<int, Airport> airportMap; //hash map that maps airport name to airport object
+        std::unordered_map<int, Airport> airportMap; //hash map that maps airport ID to airport object
         std::unordered_map<std::string, std::vector<int>> cities; //hash map that maps city name to vector of airport id's within that city
         cs225::PNG map; //will hold mercator map
 };

@@ -62,7 +62,6 @@ endif
 # .PHONY: all test clean output_msg
 
 all : $(EXENAME)
-
 output_msg: ; $(CLANG_VERSION_MSG)
 
 $(EXENAME) : output_msg $(OBJS)
@@ -70,6 +69,7 @@ $(EXENAME) : output_msg $(OBJS)
 
 project_program : main.o graph.o routes.o airport.o PNG.o
 	$(CXX) $(CXXFLAGS) graph.o routes.o aiport.o PNG.o main.o
+
 main.o : main.cpp graph.h routes.h airport.h 
 	$(CXX) $(CXXFLAGS) main.cpp
 
@@ -82,14 +82,8 @@ routes.o : routes.cpp routes.h
 airport.o : airport.cpp airport.h 
 	$(CXX) $(CXXFLAGS) airport.cpp
 
-PNG.o : cs225/PNG.cpp cs225/PNG.h cs225/HSLAPixel.h cs225/lodepng/lodepng.h
-	$(CXX) $(CXXFLAGS) cs225/PNG.cpp
+include cs225/make/cs225.mk
 
-HSLAPixel.o : cs225/HSLAPixel.cpp cs225/HSLAPixel.h
-	$(CXX) $(CXXFLAGS) cs225/HSLAPixel.cpp
-
-lodepng.o : cs225/lodepng/lodepng.cpp cs225/lodepng/lodepng.h
-	$(CXX) $(CXXFLAGS) cs225/lodepng/lodepng.cpp
 
 
 
