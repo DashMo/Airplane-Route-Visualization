@@ -13,6 +13,7 @@ class Airport{
         int getX();
         int getY();
         int getID();
+        int getSize();
         std::string getName();
     private:
         //std::vector<Routes> routes; //edgelist of outgoing routes from this airport

@@ -36,6 +36,10 @@ int Airport::getID(){
     return ID;
 }
 
+int Airport::getSize(){
+    return size;
+}
+
 std::string Airport::getName(){
     return name;
 }

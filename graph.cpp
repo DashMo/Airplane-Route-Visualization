@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include "cs225/HSLAPixel.h"
+#include <cmath>
 using std::vector;
 using std::cout;
 using std::endl;
@@ -139,7 +140,7 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
   }
   //std::cout<<width<<" "<<height<<std::endl;
   //std::cout<<x<<" "<<y<<std::endl;
-  double radius = 3.0;
+  double radius = log(airport.getSize());
   //std::cout<<"CHECK2"<<std::endl;
 
   unsigned leftbound,rightbound,upperbound,lowerbound;
