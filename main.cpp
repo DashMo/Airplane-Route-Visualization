@@ -7,6 +7,6 @@ int main(){
 
     Graph g("airports.dat.txt","routes.dat.txt","MercatorMap.png");
     cs225::PNG pic = g.drawMap();
-    //pic.writeToFile("TestMap.png");
+    pic.writeToFile("TestMap.png");
     return 1;
 }

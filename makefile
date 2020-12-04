@@ -102,7 +102,7 @@ airport.o : airport.cpp airport.h
 
 .PHONY: clean
 clean :
-	rm -f -r *.o * .dSYM main
+	rm -f *.o main
 
 
 

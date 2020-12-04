@@ -102,6 +102,29 @@ PNG Graph::drawMap(){
 }
 
 void Graph::drawRoute(Routes& route, PNG& pic){
+  Airport& a1 = airportMap.at(route.source);
+  Airport& a2 = airportMap.at(route.dest);
+  int x1,x2,y1,y2,dx,dy;
+  if(a1.getX() < a2.getX()){
+    x1 = a1.getX();
+    x2 = a2.getX();
+    y1 = a1.getY();
+    y2 = a2.getY();
+  }
+  else{
+    x1 = a2.getX();
+    x2 = a1.getX();
+    y1 = a2.getY();
+    y2 = a1.getY();
+  }
+  dx = x2 - x1;
+  dy = y2 - y1;
+  int j;
+  for(int i = x1; i < x2; i++){
+    j = y1 + dy*(i - x1) / dx;
+    HSLAPixel & pixel = pic.getPixel(i, j);
+    pixel = HSLAPixel(120,1,0.5,1);
+  }
   return;
 }
 
@@ -110,8 +133,9 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
   unsigned height = pic.height();
   int x = airport.getX();
   int y = airport.getY();
-  if(y > (int)height){
-    cout<<"CHECK"<<endl;
+  if(y > (int)height || y < 0 || x > (int)width || x < 0){
+    cout<<airport.getName()<<" has invalid coordinates and will not be mapped."<<endl;
+    return;
   }
   //std::cout<<width<<" "<<height<<std::endl;
   //std::cout<<x<<" "<<y<<std::endl;
@@ -149,6 +173,10 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
     //std::cout<<"CHECK2"<<std::endl;
     for (unsigned j = lowerbound; j < upperbound; j++) 
     {
+      if(j > height){
+        cout<<airport.getX()<<" "<<airport.getY()<<" "<<airport.getID()<<endl;
+        return;
+      }
       HSLAPixel & pixel = pic.getPixel(i, j); //creates reference to pixel
       double distance = sqrt((x - i) * (x -i) + (y - j) * (y - j)); //calculates Euclidean distance from center
       //std::cout<<distance<<std::endl;

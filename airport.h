@@ -12,6 +12,8 @@ class Airport{
         double getLon();
         int getX();
         int getY();
+        int getID();
+        std::string getName();
     private:
         //std::vector<Routes> routes; //edgelist of outgoing routes from this airport
         int x; //x coordinate for mapping onto PNG

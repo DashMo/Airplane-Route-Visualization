@@ -32,6 +32,14 @@ int Airport::getY(){
     return y;
 }
 
+int Airport::getID(){
+    return ID;
+}
+
+std::string Airport::getName(){
+    return name;
+}
+
 void Airport::increaseSize(){
     size++; //increases size by 1
 }
