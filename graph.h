@@ -7,15 +7,15 @@
 #include <string>
 #include "cs225/PNG.h"
 using std::string;
-
+using cs225::PNG;
 class Graph {
 
     public:
-        Graph(string &airportinfo, string &routesinfo, string &mapname); //constructor takes file names for airport database, routes database, and mercator map image
-        void addEdge();
-        void addVertex();
-        void displayMap();
-        ~Graph();
+        Graph(string airportinfo, string routesinfo, string mapname); //constructor takes file names for airport database, routes database, and mercator map image
+        PNG drawMap();
+        void drawRoute(Routes& route, PNG& pic);
+        void drawAirport(Airport& airport, PNG& pic);
+        //~Graph();
 
     private:
         //edge holds name of airport and name of destination airport, graph implementations and traversals, adjacency list
