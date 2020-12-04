@@ -60,6 +60,7 @@ endif
 endif
 
 # .PHONY: all test clean output_msg
+include cs225/make/cs225.mk
 
 all : $(EXENAME)
 output_msg: ; $(CLANG_VERSION_MSG)
@@ -82,7 +83,6 @@ routes.o : routes.cpp routes.h
 airport.o : airport.cpp airport.h 
 	$(CXX) $(CXXFLAGS) airport.cpp
 
-include cs225/make/cs225.mk
 
 
 

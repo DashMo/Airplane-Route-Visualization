@@ -113,7 +113,7 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
   if(y > (int)height){
     cout<<"CHECK"<<endl;
   }
-  std::cout<<width<<" "<<height<<std::endl;
+  //std::cout<<width<<" "<<height<<std::endl;
   //std::cout<<x<<" "<<y<<std::endl;
   double radius = 3.0;
   //std::cout<<"CHECK2"<<std::endl;
@@ -144,20 +144,20 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
     return;
   }
 
-  // for (unsigned i = leftbound; i < rightbound; i++) 
-  // {
-  //   //std::cout<<"CHECK2"<<std::endl;
-  //   for (unsigned j = lowerbound; j < upperbound; j++) 
-  //   {
-  //     HSLAPixel & pixel = pic.getPixel(i, j); //creates reference to pixel
-  //     double distance = sqrt((x - i) * (x -i) + (y - j) * (y - j)); //calculates Euclidean distance from center
-  //     //std::cout<<distance<<std::endl;
-  //     if(distance < radius){ //if the distance is greater than 160 pixels, set it back to 160 because the luminance does not decrease past 80%
-  //       pixel = HSLAPixel(0,1,0.5,1);
-  //       //std::cout<<"CHECK"<<std::endl;
-  //     }
-  //     //pixel.l *= (1 - distance * .005); //pixel's luminance decreased by .005 for every pixel away form the center it is
+  for (unsigned i = leftbound; i < rightbound; i++) 
+  {
+    //std::cout<<"CHECK2"<<std::endl;
+    for (unsigned j = lowerbound; j < upperbound; j++) 
+    {
+      HSLAPixel & pixel = pic.getPixel(i, j); //creates reference to pixel
+      double distance = sqrt((x - i) * (x -i) + (y - j) * (y - j)); //calculates Euclidean distance from center
+      //std::cout<<distance<<std::endl;
+      if(distance < radius){ //if the distance is greater than 160 pixels, set it back to 160 because the luminance does not decrease past 80%
+        pixel = HSLAPixel(0,1,0.5,1);
+        //std::cout<<"CHECK"<<std::endl;
+      }
+      //pixel.l *= (1 - distance * .005); //pixel's luminance decreased by .005 for every pixel away form the center it is
       
-  //   }
-  // }
+    }
+  }
 }
