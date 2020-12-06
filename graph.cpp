@@ -213,7 +213,7 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
 void Graph::BFS(Airport startNode) {
 
   //an array of references to nodes we visited
-  vector<Airport&> visited;
+  vector<Airport> visited;
   
   
   Airport currentNode = startNode;
@@ -230,13 +230,14 @@ void Graph::BFS(Airport startNode) {
 
   //process current Node
   vector<Airport> neighbors;
-  for (int i = 0; i < routeList.at(airportMap.at(currentNode)).size(); i++) {
-    neighbors.push_back(airportMap.at(routeList.find(airportMap.at(currentNode)).at(i).dest));
+   
+  for (unsigned i = 0; i < routeList.at(airportMap.at(currentNode.getID()).getID()).size(); i++) {
+    neighbors.push_back(airportMap.at(routeList.at(airportMap.at(currentNode.getID()).getID()).at(i).dest));
   }
   
   for (Airport neighbor : neighbors) {
     bool isVisited = false;
-    for (int i = 0; i < visited.size(); i++) {
+    for (unsigned i = 0; i < visited.size(); i++) {
       if (neighbor.getID() == visited.at(i).getID()) {
         isVisited = true;
       }
