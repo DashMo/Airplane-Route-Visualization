@@ -16,6 +16,7 @@ class Graph {
         void drawRoute(Routes& route, PNG& pic);
         void drawAirport(Airport& airport, PNG& pic);
         //~Graph();
+        void BFS(Airport startNode);
 
     private:
         //edge holds name of airport and name of destination airport, graph implementations and traversals, adjacency list

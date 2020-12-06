@@ -1,6 +1,7 @@
 #include "graph.h"
 #include <fstream>
 #include <vector>
+#include <queue>
 #include <iostream>
 #include "cs225/HSLAPixel.h"
 #include <cmath>
@@ -189,4 +190,63 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
       
     }
   }
+}
+
+// BFSTraversal(start_node):
+//   visited := a set to store references to all visited nodes
+
+//   queue := a queue to store references to nodes we should visit later
+//   queue.enqueue(start_node)
+//   visited.add(start_node)
+
+//   while queue is not empty:
+//     current_node := queue.dequeue()
+
+//     process current_node
+//     # for example, print(current_node.value)
+
+//     for neighbor in current_node.neighbors:
+//       if neighbor is not in visited:
+//         queue.enqueue(neighbor)
+//         visited.add(neighbor)
+
+void Graph::BFS(Airport startNode) {
+
+  //an array of references to nodes we visited
+  vector<Airport&> visited;
+  
+  
+  Airport currentNode = startNode;
+  //queue for bfs
+  std::queue<Airport> q;
+
+  q.push(startNode);
+  visited.push_back(startNode);
+
+  while (!q.empty()) {
+    currentNode = q.front();
+    q.pop();
+  }
+
+  //process current Node
+  vector<Airport> neighbors;
+  for (int i = 0; i < routeList.at(airportMap.at(currentNode)).size(); i++) {
+    neighbors.push_back(airportMap.at(routeList.find(airportMap.at(currentNode)).at(i).dest));
+  }
+  
+  for (Airport neighbor : neighbors) {
+    bool isVisited = false;
+    for (int i = 0; i < visited.size(); i++) {
+      if (neighbor.getID() == visited.at(i).getID()) {
+        isVisited = true;
+      }
+    }
+    if (!isVisited) {
+      q.push(neighbor);
+      visited.push_back(neighbor);
+    }
+  }
+
+
+
 }
