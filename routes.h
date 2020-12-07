@@ -13,5 +13,7 @@ class Routes {
         double dist; //holds distance between two airports (weight of edge)
         int source; //holds source airport ID
         int dest; //holds destination airport ID
+        bool discovery;
+        bool cross;
         
 };

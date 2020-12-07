@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <queue>
+#include <list>
 #include <iostream>
 #include "cs225/HSLAPixel.h"
 #include <cmath>
@@ -228,7 +229,10 @@ void Graph::BFS(Airport startNode) {
     q.pop();
   }
 
+  
   //process current Node
+  path.add(currentNode);
+
   vector<Airport> neighbors;
    
   for (unsigned i = 0; i < routeList.at(airportMap.at(currentNode.getID()).getID()).size(); i++) {
@@ -240,14 +244,16 @@ void Graph::BFS(Airport startNode) {
     for (unsigned i = 0; i < visited.size(); i++) {
       if (neighbor.getID() == visited.at(i).getID()) {
         isVisited = true;
+        //need to make current edge or route needs to change bool cross to true and discovery to false;
       }
     }
     if (!isVisited) {
       q.push(neighbor);
       visited.push_back(neighbor);
+      //need to make current edge or route needs to change bool discovery to true and cross to false;
     }
   }
 
-
-
+  
+  //return path;
 }

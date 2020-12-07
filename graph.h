@@ -4,6 +4,7 @@
 #include <map>
 #include<unordered_map>
 #include <vector>
+#include <list>
 #include <string>
 #include "cs225/PNG.h"
 using std::string;
@@ -24,4 +25,5 @@ class Graph {
         std::unordered_map<int,std::vector<Routes>> routeList; //edgelist holding all the routes, key is airport ID and return value is vector of outgoing routes
         std::unordered_map<std::string, std::vector<int>> cities; //hash map that maps city name to vector of airport id's within that city
         cs225::PNG map; //will hold mercator map
+        std::list<Airport> path;
 };
