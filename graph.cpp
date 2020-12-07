@@ -211,10 +211,11 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
 //         queue.enqueue(neighbor)
 //         visited.add(neighbor)
 
-void Graph::BFS(Airport startNode) {
+vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
 
   //an array of references to nodes we visited
   vector<Airport> visited;
+  vector<Airport> path;
   
   
   Airport currentNode = startNode;
@@ -227,33 +228,42 @@ void Graph::BFS(Airport startNode) {
   while (!q.empty()) {
     currentNode = q.front();
     q.pop();
+
+    if (currentNode.getID() == endNode.getID()) {
+      path.push_back(currentNode);
+      break;
+    } else {
+      path.push_back(currentNode);
+    }
+    
+
+    vector<Airport> neighbors;
+   
+    for (unsigned i = 0; i < routeList.at(airportMap.at(currentNode.getID()).getID()).size(); i++) {
+      neighbors.push_back(airportMap.at(routeList.at(airportMap.at(currentNode.getID()).getID()).at(i).dest));
+    }
+  
+    for (Airport neighbor : neighbors) {
+      bool isVisited = false;
+      for (unsigned i = 0; i < visited.size(); i++) {
+        if (neighbor.getID() == visited.at(i).getID()) {
+          //two arrays one that holds a bool if its been visited or not visited, another will hold an integer id to the previous node.
+          isVisited = true;
+          //need to make current edge or route needs to change bool cross to true and discovery to false;
+        }
+      }
+      if (!isVisited) {
+        q.push(neighbor);
+        visited.push_back(neighbor);
+        //need to make current edge or route needs to change bool discovery to true and cross to false;
+      }
+    }
   }
 
   
   //process current Node
-  path.add(currentNode);
-
-  vector<Airport> neighbors;
-   
-  for (unsigned i = 0; i < routeList.at(airportMap.at(currentNode.getID()).getID()).size(); i++) {
-    neighbors.push_back(airportMap.at(routeList.at(airportMap.at(currentNode.getID()).getID()).at(i).dest));
-  }
   
-  for (Airport neighbor : neighbors) {
-    bool isVisited = false;
-    for (unsigned i = 0; i < visited.size(); i++) {
-      if (neighbor.getID() == visited.at(i).getID()) {
-        isVisited = true;
-        //need to make current edge or route needs to change bool cross to true and discovery to false;
-      }
-    }
-    if (!isVisited) {
-      q.push(neighbor);
-      visited.push_back(neighbor);
-      //need to make current edge or route needs to change bool discovery to true and cross to false;
-    }
-  }
 
   
-  //return path;
+  return path;
 }

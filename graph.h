@@ -17,7 +17,7 @@ class Graph {
         void drawRoute(Routes& route, PNG& pic);
         void drawAirport(Airport& airport, PNG& pic);
         //~Graph();
-        void BFS(Airport startNode);
+        vector<Airport> BFS(Airport startNode, Airport endNode);
 
     private:
         //edge holds name of airport and name of destination airport, graph implementations and traversals, adjacency list
@@ -25,5 +25,5 @@ class Graph {
         std::unordered_map<int,std::vector<Routes>> routeList; //edgelist holding all the routes, key is airport ID and return value is vector of outgoing routes
         std::unordered_map<std::string, std::vector<int>> cities; //hash map that maps city name to vector of airport id's within that city
         cs225::PNG map; //will hold mercator map
-        std::list<Airport> path;
+        // std::vector<Airport> path;
 };
