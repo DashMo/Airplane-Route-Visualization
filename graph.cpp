@@ -259,11 +259,6 @@ vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
       }
     }
   }
-
-  
-  //process current Node
-  
-
-  
+   
   return path;
 }
