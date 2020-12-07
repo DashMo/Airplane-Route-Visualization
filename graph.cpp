@@ -213,17 +213,18 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
 
 vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
 
-  //an array of references to nodes we visited
-  // vector<Airport> visited;
   vector<Airport> path;
-  int prevArray[maxID + 1];
+  int prevArray[maxID + 1]; //should we initialize this all to a certain value or does that not matter?
   bool visited[maxID + 1];
+
+  //init visited array
+  for (int i = 0; i < maxID + 1; i++) {
+    visited[i] = false;
+  }
+  
   Airport backTrackNode = startNode;
-  
-  
   Airport currentNode = startNode;
-  //queue for bfs
-  std::queue<Airport> q;
+  std::queue<Airport> q; //queue for bfs
 
   q.push(startNode); 
   visited[startNode.getID()] = true;
