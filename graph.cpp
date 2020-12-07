@@ -90,6 +90,8 @@ Graph::Graph(string airportList, string routesList, string mapname){
         // cout<<endl<<endl;
         count++;
     }
+    cout<<airportMap.size()<<" "<<routeList.size()<<endl;
+
 }
 
 PNG Graph::drawMap(){
@@ -142,7 +144,7 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
   }
   //std::cout<<width<<" "<<height<<std::endl;
   //std::cout<<x<<" "<<y<<std::endl;
-  double radius = log(airport.getSize());
+  double radius = log(airport.getSize()) + 1;
   //std::cout<<"CHECK2"<<std::endl;
 
   unsigned leftbound,rightbound,upperbound,lowerbound;
