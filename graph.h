@@ -17,7 +17,10 @@ class Graph {
         void drawRoute(Routes& route, PNG& pic);
         void drawAirport(Airport& airport, PNG& pic);
         //~Graph();
+        std::vector<Airport> search(int start, int end);
         std::vector<Airport> BFS(Airport startNode, Airport endNode);
+        void addRoute(int start, int end);
+        void addAirport(double latitude, double longitude,std::string airportName, int airportID,std::string airportCity);
 
     private:
         //edge holds name of airport and name of destination airport, graph implementations and traversals, adjacency list

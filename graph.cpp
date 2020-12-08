@@ -6,11 +6,13 @@
 #include <iostream>
 #include "cs225/HSLAPixel.h"
 #include <cmath>
+#include <algorithm>
 using std::vector;
 using std::cout;
 using std::endl;
 using cs225::HSLAPixel;
 using std::ifstream;
+
 Graph::Graph(string airportList, string routesList, string mapname){
     
   map.readFromFile(mapname); //stores mercator map into graph class
@@ -26,9 +28,7 @@ Graph::Graph(string airportList, string routesList, string mapname){
     while(getline(ss, word, ',')) { //gets each word in the line (they are comma seperated) and stores in vector
       row.push_back(word);
     }
-    // for(auto x : row)
-    //   cout<<x<<"  ";
-    // cout<<endl<<endl;
+
     if(row[1].back() != '"'){  //handles exception where some of the airport names have a comma which messes with the stringstream delimiter which was looking for commas
       row[1] = row[1]+row[2];  //recombines the seperated airport name
       row.erase(row.begin() + 2);
@@ -45,24 +45,13 @@ Graph::Graph(string airportList, string routesList, string mapname){
     double lon = stod(row[7]); //gets longitude
     cout<<airportID<<" "<<airportName<<" "<<airportCity<<" "<<lat<<" "<<lon<<endl<<endl;
     count++;
-
-    cities[airportCity].push_back(airportID); //stores airportID within the correct city
-    Airport airport(lat,lon,airportName, map.width(), map.height(),airportID); //creates airport object
-    airportMap.insert(std::make_pair(airportID,airport)); //stores airport object into vertex map
-    // if(count < 100000){
-    //     bool check = true;
-    //   //bool check = drawMap(result,lat,lon);
-    //   if(!check){
-    //     cout<<"ERROR "<<airportID<<endl;
-    //     //return;
-    //   }
-    // }
-    // else{
-    // result.writeToFile("MapOutput2.png");
-    // return;
-    // }
+    addAirport(lat,lon,airportName,airportID,airportCity);
+    // cities[airportCity].push_back(airportID); //stores airportID within the correct city
+    // Airport airport(lat,lon,airportName, map.width(), map.height(),airportID); //creates airport object
+    // airportMap.insert(std::make_pair(airportID,airport)); //stores airport object into vertex map
+    // if(airportID > maxID)
+    //   maxID = airportID;
   }
-  //result.writeToFile("MapOutput2.png");
   ifstream routes(routesList); //opens file
     count = 0;
     while(getline(routes,line) && count < 100000){ //will keep iterating until all the lines are read 
@@ -76,14 +65,14 @@ Graph::Graph(string airportList, string routesList, string mapname){
         if(row[3]!="\\N" && row[5]!="\\N"){ //does not use entry if the entry is missing its airport ID for the source or destination airport
           int start = stoi(row[3]); //converts source airport ID to integer
           int end = stoi(row[5]); //converts destination airport ID to integer
-          
-          if(airportMap.find(start) != airportMap.end() && airportMap.find(end) != airportMap.end()){ //if the source and destination airports exist in the map, store the route
-              Airport &begin = airportMap.at(start); //gets start and ending airports
-              Airport &stop = airportMap.at(end);
-              stop.increaseSize(); //increases size of airport for which the flight is incomings
-              Routes path(start, end, begin.getLat(),begin.getLon(), stop.getLat(), stop.getLon()); //makes Route object (edge)
-              routeList[start].push_back(path); //insert route into edgelist
-          }
+          addRoute(start,end);
+          // if(airportMap.find(start) != airportMap.end() && airportMap.find(end) != airportMap.end()){ //if the source and destination airports exist in the map, store the route
+          //     Airport &begin = airportMap.at(start); //gets start and ending airports
+          //     Airport &stop = airportMap.at(end);
+          //     stop.increaseSize(); //increases size of airport for which the flight is incomings
+          //     Routes path(start, end, begin.getLat(),begin.getLon(), stop.getLat(), stop.getLon()); //makes Route object (edge)
+          //     routeList[start].push_back(path); //insert route into edgelist
+          // }
         }
         // for(auto x : row)
         //     cout<<x<<"  ";
@@ -93,6 +82,27 @@ Graph::Graph(string airportList, string routesList, string mapname){
     cout<<airportMap.size()<<" "<<routeList.size()<<endl;
 
 }
+
+void Graph::addRoute(int start, int end){
+  cout<<"CHECK1"<<endl;
+  if(airportMap.find(start) != airportMap.end() && airportMap.find(end) != airportMap.end()){ //if the source and destination airports exist in the map, store the route
+    cout<<"CHECK"<<endl;
+    Airport &begin = airportMap.at(start); //gets start and ending airports
+    Airport &stop = airportMap.at(end);
+    stop.increaseSize(); //increases size of airport for which the flight is incomings
+    Routes path(start, end, begin.getLat(),begin.getLon(), stop.getLat(), stop.getLon()); //makes Route object (edge)
+    routeList[start].push_back(path); //insert route into edgelist
+  }
+}
+
+void Graph::addAirport(double latitude, double longitude,std::string airportName, int airportID,std::string airportCity){
+    cities[airportCity].push_back(airportID); //stores airportID within the correct city
+    Airport airport(latitude,longitude,airportName, map.width(), map.height(),airportID); //creates airport object
+    airportMap.insert(std::make_pair(airportID,airport)); //stores airport object into vertex map
+    if(airportID > maxID)
+      maxID = airportID;
+}
+
 
 PNG Graph::drawMap(){
   PNG pic = map;
@@ -218,11 +228,12 @@ std::vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
   std::vector<Airport> path;
   std::vector<int> prevArray(maxID + 1); //should we initialize this all to a certain value or does that not matter?
   std::vector<bool> visited(maxID + 1, false);
-
+  cout<<"Max ID: "<<maxID<<endl;
   //init visited array
   // for (int i = 0; i < maxID + 1; i++) {
   //   visited[i] = false;
   // }
+  
   
   Airport backTrackNode = startNode;
   Airport currentNode = startNode;
@@ -234,32 +245,39 @@ std::vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
   while (!q.empty()) {
     backTrackNode = currentNode;
     currentNode = q.front();
-    prevArray.at(currentNode.getID()) = backTrackNode.getID();
+    //prevArray.at(currentNode.getID()) = backTrackNode.getID();
     q.pop();
-
+    cout<<"Current Node: "<<currentNode.getID()<<endl;
     if (currentNode.getID() == endNode.getID()) {
       //backtrack using prev node to get path and push in vector 
-      while (backTrackNode.getID() != startNode.getID()) {
-        backTrackNode = airportMap.at(prevArray.at(backTrackNode.getID()));
-        path.push_back(backTrackNode);
+      path.push_back(currentNode);
+      while (currentNode.getID() != startNode.getID()) {
+        currentNode = airportMap.at(prevArray.at(currentNode.getID()));
+        path.push_back(currentNode);
       }
+      //currentNode = airportMap.at(prevArray.at(currentNode.getID()));
+      std::reverse(path.begin(),path.end());
       break;
       
     } else {
       //add all not visited neighbors
-      vector<Airport> neighbors;
-   
-      for (unsigned i = 0; i < routeList.at(airportMap.at(currentNode.getID()).getID()).size(); i++) {
-        neighbors.push_back(airportMap.at(routeList.at(airportMap.at(currentNode.getID()).getID()).at(i).dest));
-      }
-  
-      for (Airport neighbor : neighbors) {
-        if (visited[neighbor.getID()] == false) {
-          q.push(neighbor);
-          visited[neighbor.getID()] = true;
+      if(routeList.find(currentNode.getID()) != routeList.end()){
+        vector<Routes> neighbors = routeList.at(currentNode.getID());
+    
+        for (Routes neighbor : neighbors) {
+          Airport& next = airportMap.at(neighbor.dest);
+          if (visited[next.getID()] == false) {
+            q.push(next);
+            visited[next.getID()] = true;
+            cout<<"Pushing "<<next.getID()<<endl;
+            prevArray.at(next.getID()) = currentNode.getID();
+          }
         }
       }
     }
   }
   return path;
+}
+std::vector<Airport> Graph::search(int start, int end){
+  return BFS(airportMap.at(start),airportMap.at(end));
 }
