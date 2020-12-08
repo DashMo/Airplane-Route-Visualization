@@ -17,12 +17,12 @@ Graph::Graph(string airportList, string routesList, string mapname){
     
   map.readFromFile(mapname); //stores mercator map into graph class
   
+  ///////////////FIRST SECTION - parse airportList file to create vertices of graph//////////////
   ifstream airports(airportList); //opens file
   string line; //will hold each line read
   string word; //will hold each word parsed from the line
-  int count = 0;
   
-  while(getline(airports,line) && count < 100000){ //will keep iterating until all the lines are read 
+  while(getline(airports,line)){ //will keep iterating until all the lines are read 
     std::istringstream ss(line); //stringsream to parse line read
     vector<string> row; //vector will hold seperated data of the line
     while(getline(ss, word, ',')) { //gets each word in the line (they are comma seperated) and stores in vector
@@ -43,50 +43,36 @@ Graph::Graph(string airportList, string routesList, string mapname){
     string airportCity = row[2].substr(1,row[2].length()-2); //gets city name and removes quotes
     double lat = stod(row[6]); //gets latitude
     double lon = stod(row[7]); //gets longitude
-    cout<<airportID<<" "<<airportName<<" "<<airportCity<<" "<<lat<<" "<<lon<<endl<<endl;
-    count++;
+    //cout<<airportID<<" "<<airportName<<" "<<airportCity<<" "<<lat<<" "<<lon<<endl<<endl;
     addAirport(lat,lon,airportName,airportID,airportCity);
-    // cities[airportCity].push_back(airportID); //stores airportID within the correct city
-    // Airport airport(lat,lon,airportName, map.width(), map.height(),airportID); //creates airport object
-    // airportMap.insert(std::make_pair(airportID,airport)); //stores airport object into vertex map
-    // if(airportID > maxID)
-    //   maxID = airportID;
   }
+
+  /////////////Second Section - parse routeList file to add edges to graph///////////////
   ifstream routes(routesList); //opens file
-    count = 0;
-    while(getline(routes,line) && count < 100000){ //will keep iterating until all the lines are read 
+    while(getline(routes,line)){ //will keep iterating until all the lines are read 
         std::istringstream ss(line); //stringsream to parse line read
         vector<string> row; //vector will hold seperated data of the line
         while(getline(ss, word, ',')) { //gets each word in the line (they are comma seperated) and stores in vector
-            cout<<word<<" ";
+            //cout<<word<<" ";
             row.push_back(word);
         }
-        cout<<endl;
+        //cout<<endl;
         if(row[3]!="\\N" && row[5]!="\\N"){ //does not use entry if the entry is missing its airport ID for the source or destination airport
           int start = stoi(row[3]); //converts source airport ID to integer
           int end = stoi(row[5]); //converts destination airport ID to integer
           addRoute(start,end);
-          // if(airportMap.find(start) != airportMap.end() && airportMap.find(end) != airportMap.end()){ //if the source and destination airports exist in the map, store the route
-          //     Airport &begin = airportMap.at(start); //gets start and ending airports
-          //     Airport &stop = airportMap.at(end);
-          //     stop.increaseSize(); //increases size of airport for which the flight is incomings
-          //     Routes path(start, end, begin.getLat(),begin.getLon(), stop.getLat(), stop.getLon()); //makes Route object (edge)
-          //     routeList[start].push_back(path); //insert route into edgelist
-          // }
+          
         }
-        // for(auto x : row)
-        //     cout<<x<<"  ";
-        // cout<<endl<<endl;
-        count++;
     }
-    cout<<airportMap.size()<<" "<<routeList.size()<<endl;
+    //cout<<airportMap.size()<<" "<<routeList.size()<<endl;
 
 }
 
+
+
+
 void Graph::addRoute(int start, int end){
-  cout<<"CHECK1"<<endl;
   if(airportMap.find(start) != airportMap.end() && airportMap.find(end) != airportMap.end()){ //if the source and destination airports exist in the map, store the route
-    cout<<"CHECK"<<endl;
     Airport &begin = airportMap.at(start); //gets start and ending airports
     Airport &stop = airportMap.at(end);
     stop.increaseSize(); //increases size of airport for which the flight is incomings
@@ -95,6 +81,8 @@ void Graph::addRoute(int start, int end){
   }
 }
 
+
+
 void Graph::addAirport(double latitude, double longitude,std::string airportName, int airportID,std::string airportCity){
     cities[airportCity].push_back(airportID); //stores airportID within the correct city
     Airport airport(latitude,longitude,airportName, map.width(), map.height(),airportID); //creates airport object
@@ -102,6 +90,8 @@ void Graph::addAirport(double latitude, double longitude,std::string airportName
     if(airportID > maxID)
       maxID = airportID;
 }
+
+
 
 
 PNG Graph::drawMap(){
@@ -116,11 +106,15 @@ PNG Graph::drawMap(){
   return pic;
 }
 
+
+
 void Graph::drawRoute(Routes& route, PNG& pic){
-  Airport& a1 = airportMap.at(route.source);
+  Airport& a1 = airportMap.at(route.source); //gets the two airports
   Airport& a2 = airportMap.at(route.dest);
   int x1,x2,y1,y2,dx,dy;
-  if(a1.getX() < a2.getX()){
+  
+  //initializes variables so that the airport with the larger x coordinate is stored in x2 and y2
+  if(a1.getX() < a2.getX()){ 
     x1 = a1.getX();
     x2 = a2.getX();
     y1 = a1.getY();
@@ -132,31 +126,33 @@ void Graph::drawRoute(Routes& route, PNG& pic){
     y1 = a2.getY();
     y2 = a1.getY();
   }
-  dx = x2 - x1;
-  dy = y2 - y1;
+
+  dx = x2 - x1; //calculates difference in x
+  dy = y2 - y1; //calculates difference in y
   int j;
-  for(int i = x1; i < x2; i++){
-    j = y1 + dy*(i - x1) / dx;
-    HSLAPixel & pixel = pic.getPixel(i, j);
-    pixel = HSLAPixel(120,1,0.5,1);
+  for(int i = x1; i < x2; i++){ //iterates through all the pixels in the horizantal range of the line
+    j = y1 + dy*(i - x1) / dx; //uses a form of the slope formula to calculate height/y-value of the pixel to be drawn on the map based on the x
+    HSLAPixel & pixel = pic.getPixel(i, j); //accesses pixel
+    pixel = HSLAPixel(120,1,0.5,1); //changes pixel color to draw the line
   }
   return;
 }
 
+
+
 void Graph::drawAirport(Airport& airport, PNG& pic){
   unsigned width = pic.width();
   unsigned height = pic.height();
-  int x = airport.getX();
+  int x = airport.getX(); //gets coordinates of the airport
   int y = airport.getY();
-  if(y > (int)height || y < 0 || x > (int)width || x < 0){
+  if(y > (int)height || y < 0 || x > (int)width || x < 0){ //if the airport's coordinates are outside the range of the map, prints an error and returns
     cout<<airport.getName()<<" has invalid coordinates and will not be mapped."<<endl;
     return;
   }
-  //std::cout<<width<<" "<<height<<std::endl;
-  //std::cout<<x<<" "<<y<<std::endl;
-  double radius = log(airport.getSize()) + 1;
-  //std::cout<<"CHECK2"<<std::endl;
 
+  double radius = log(airport.getSize()) + 1; //the radius of the airport increases logarithmically based on the number of incoming flights to it; it is a logarathmic increase so that a massive airport doesnt just cover the map
+
+  //series of if-else statements calculate the range of pixels in the PNG to iterate through, this allows us to not have to iterate through the whole PNG for each vertex drawn
   unsigned leftbound,rightbound,upperbound,lowerbound;
   if(x - radius -1 > 0)
     leftbound = x - radius -1;
@@ -178,29 +174,15 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
   else 
     upperbound = height;
   
-  if(y>(int)height){
-    //std::cout<<x<<" "<<y<<" "<<lat<<" "<<lon<<std::endl;
-    return;
-  }
-
-  for (unsigned i = leftbound; i < rightbound; i++) 
+  for (unsigned i = leftbound; i < rightbound; i++) //iterates through x range of pixels
   {
-    //std::cout<<"CHECK2"<<std::endl;
-    for (unsigned j = lowerbound; j < upperbound; j++) 
+    for (unsigned j = lowerbound; j < upperbound; j++) //iterates through y range of pixels
     {
-      if(j > height){
-        cout<<airport.getX()<<" "<<airport.getY()<<" "<<airport.getID()<<endl;
-        return;
-      }
       HSLAPixel & pixel = pic.getPixel(i, j); //creates reference to pixel
       double distance = sqrt((x - i) * (x -i) + (y - j) * (y - j)); //calculates Euclidean distance from center
-      //std::cout<<distance<<std::endl;
-      if(distance < radius){ //if the distance is greater than 160 pixels, set it back to 160 because the luminance does not decrease past 80%
+      if(distance < radius){ //if the distance is within the radius(size of airport), color that pixel
         pixel = HSLAPixel(0,1,0.5,1);
-        //std::cout<<"CHECK"<<std::endl;
       }
-      //pixel.l *= (1 - distance * .005); //pixel's luminance decreased by .005 for every pixel away form the center it is
-      
     }
   }
 }
@@ -228,11 +210,6 @@ std::vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
   std::vector<Airport> path;
   std::vector<int> prevArray(maxID + 1); //should we initialize this all to a certain value or does that not matter?
   std::vector<bool> visited(maxID + 1, false);
-  cout<<"Max ID: "<<maxID<<endl;
-  //init visited array
-  // for (int i = 0; i < maxID + 1; i++) {
-  //   visited[i] = false;
-  // }
   
   
   Airport backTrackNode = startNode;
@@ -245,9 +222,7 @@ std::vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
   while (!q.empty()) {
     backTrackNode = currentNode;
     currentNode = q.front();
-    //prevArray.at(currentNode.getID()) = backTrackNode.getID();
     q.pop();
-    cout<<"Current Node: "<<currentNode.getID()<<endl;
     if (currentNode.getID() == endNode.getID()) {
       //backtrack using prev node to get path and push in vector 
       path.push_back(currentNode);
@@ -269,7 +244,6 @@ std::vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
           if (visited[next.getID()] == false) {
             q.push(next);
             visited[next.getID()] = true;
-            cout<<"Pushing "<<next.getID()<<endl;
             prevArray.at(next.getID()) = currentNode.getID();
           }
         }

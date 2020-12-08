@@ -2,7 +2,7 @@
 #include <cmath>
 
 
-//https://stackoverflow.com/questions/27126714/c-latitude-and-longitude-distance-calculator
+//https://stackoverflow.com/questions/27126714/c-latitude-and-longitude-distance-calculator used to calculate distance using longitude and latitude
 double toRad(double degree) {
     return degree/180 * 3.14159265359;
 }
@@ -16,6 +16,7 @@ double getDist(double lat1, double long1, double lat2, double long2) {
     dist = 6371 * dist;
     return dist;
 }
+
 
 
 Routes::Routes(int start, int end, double lat1, double lon1, double lat2, double lon2){
