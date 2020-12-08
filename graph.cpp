@@ -213,37 +213,38 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
 //         queue.enqueue(neighbor)
 //         visited.add(neighbor)
 
-vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
+std::vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
 
-  vector<Airport> path;
-  int prevArray[maxID + 1]; //should we initialize this all to a certain value or does that not matter?
-  bool visited[maxID + 1];
+  std::vector<Airport> path;
+  std::vector<int> prevArray(maxID + 1); //should we initialize this all to a certain value or does that not matter?
+  std::vector<bool> visited(maxID + 1, false);
 
   //init visited array
-  for (int i = 0; i < maxID + 1; i++) {
-    visited[i] = false;
-  }
+  // for (int i = 0; i < maxID + 1; i++) {
+  //   visited[i] = false;
+  // }
   
   Airport backTrackNode = startNode;
   Airport currentNode = startNode;
   std::queue<Airport> q; //queue for bfs
 
   q.push(startNode); 
-  visited[startNode.getID()] = true;
+  visited.at(startNode.getID()) = true;
 
   while (!q.empty()) {
     backTrackNode = currentNode;
     currentNode = q.front();
-    prevArray[currentNode.getID()] = backTrackNode.getID();
+    prevArray.at(currentNode.getID()) = backTrackNode.getID();
     q.pop();
 
     if (currentNode.getID() == endNode.getID()) {
       //backtrack using prev node to get path and push in vector 
       while (backTrackNode.getID() != startNode.getID()) {
-        backTrackNode = airportMap[prevArray[backTrackNode.getID()]];
+        backTrackNode = airportMap.at(prevArray.at(backTrackNode.getID()));
         path.push_back(backTrackNode);
       }
       break;
+      
     } else {
       //add all not visited neighbors
       vector<Airport> neighbors;
@@ -259,10 +260,6 @@ vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
         }
       }
     }
-    
-
-    
   }
-   
   return path;
 }
