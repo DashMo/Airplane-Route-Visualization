@@ -95,6 +95,7 @@ void Graph::addAirport(double latitude, double longitude,std::string airportName
 
 
 PNG Graph::drawMap(){
+  cout<<"Drawing Map..."<<endl;
   PNG pic = map;
   for(auto list : routeList){ //iterates through all the airports' outgoing edgelists
     for(auto route : list.second) //iterates through all the edgelist's routes
@@ -103,6 +104,7 @@ PNG Graph::drawMap(){
   for(auto airport:airportMap){
     drawAirport(airport.second, pic); //draws each airport by passing in each airport from the map
   }
+  cout<<"Finished Drawing Map"<<endl<<endl;
   return pic;
 }
 
@@ -252,6 +254,62 @@ std::vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
   }
   return path;
 }
-std::vector<Airport> Graph::search(int start, int end){
-  return BFS(airportMap.at(start),airportMap.at(end));
+
+//wrapper that takes user input to call BFS to find shortest path
+std::vector<Airport> Graph::findPath(){
+  cout<<"Please enter your starting city: ";
+  string city;
+  std::getline(std::cin,city);
+  cout<<city<<endl;
+  if(cities.find(city) == cities.end()){
+    cout<<"Invalid City"<<endl;
+    return std::vector<Airport>();
+  }
+  std::vector<int> airportList = cities.at(city);
+  for(size_t i = 0; i < airportList.size(); i++){
+    cout<<i<<" - "<<airportMap.at(airportList[i]).getName()<<endl;
+  }
+
+  cout<<"Please select your starting airport (type in number from list): "<<endl;
+  string name;
+  std::getline(std::cin,name);
+  int airport = std::stoi(name);
+  int start = airportList[airport];
+
+  cout<<"Please enter your destination city: ";
+  string city2;
+  std::getline(std::cin,city2);
+  cout<<city2<<endl;
+  if(cities.find(city2) == cities.end()){
+    cout<<"Invalid City"<<endl;
+    return std::vector<Airport>();
+  }
+  airportList = cities.at(city2);
+  for(size_t i = 0; i < airportList.size(); i++){
+    cout<<i<<" - "<<airportMap.at(airportList[i]).getName()<<endl;
+  }
+  
+  cout<<"Please select your destination airport (type in number from list): "<<endl;
+  std::getline(std::cin,name);
+  airport = std::stoi(name);
+  int end = airportList[airport];
+
+  std::vector<Airport> path = BFS(airportMap.at(start),airportMap.at(end));
+  if(path.empty()){
+    cout<<"No routes were found"<<endl;
+    return path;
+  }
+  cout<<"The shortest route has "<< path.size() - 1<< " flights."<<endl;
+  cout<<"The route with the shortest number of flights is: ";
+  for(size_t i = 0; i < path.size()-1; i++){
+    cout<<path[i].getName()<<" -> ";
+  }
+  cout<<path[path.size()-1].getName()<<endl<<endl;
+
+  return path;
+}
+
+//used for testing to input start and end airportID's for BFS
+std::vector<Airport> Graph::findPath(int start, int end){
+  return BFS(airportMap.at(start),airportMap.at(end)); 
 }
