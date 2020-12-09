@@ -13,16 +13,18 @@ int main(int argc, char *argv[]){
     }
     
     Graph g(argv[1],argv[2],"MercatorMap.png");
-    //g.addRoute(3077,3797);
-    //g.addRoute(3797,3093);
-    //g.addRoute(3077,3093);
-    //g.addRoute(3093,507);
-    g.findPath();
+    g.addRoute(3077,3797);
+    g.addRoute(3797,3093);
+    g.addRoute(3077,3093);
+    g.addRoute(3093,507);
+    std::vector<Airport> path = g.findPath();
     // for(auto airport : g.findPath(3077,507)){
     //     cout<<airport.getName()<<" -> ";
     // }
     // cout<<std::endl;
-    cs225::PNG pic = g.drawMap();
+    g.drawMap();
+    g.drawPath(path);
+    cs225::PNG pic = g.getMap();
     pic.writeToFile("TestMapV3.png");
     return 1;
 }

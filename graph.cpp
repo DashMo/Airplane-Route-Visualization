@@ -14,7 +14,7 @@ using cs225::HSLAPixel;
 using std::ifstream;
 
 Graph::Graph(string airportList, string routesList, string mapname){
-    
+  
   map.readFromFile(mapname); //stores mercator map into graph class
   
   ///////////////FIRST SECTION - parse airportList file to create vertices of graph//////////////
@@ -94,9 +94,9 @@ void Graph::addAirport(double latitude, double longitude,std::string airportName
 
 
 
-PNG Graph::drawMap(){
+void Graph::drawMap(){
   cout<<"Drawing Map..."<<endl;
-  PNG pic = map;
+  PNG & pic = map;
   for(auto list : routeList){ //iterates through all the airports' outgoing edgelists
     for(auto route : list.second) //iterates through all the edgelist's routes
       drawRoute(route, pic); //calls drawRoute to draw edge between the two airports
@@ -105,16 +105,26 @@ PNG Graph::drawMap(){
     drawAirport(airport.second, pic); //draws each airport by passing in each airport from the map
   }
   cout<<"Finished Drawing Map"<<endl<<endl;
-  return pic;
 }
 
+PNG Graph::getMap(){
+  return map;
+}
 
 
 void Graph::drawRoute(Routes& route, PNG& pic){
   Airport& a1 = airportMap.at(route.source); //gets the two airports
   Airport& a2 = airportMap.at(route.dest);
   int x1,x2,y1,y2,dx,dy;
+  int saturation;
+  if(route.dist > 7000)
+    saturation = 0;
+  else{
+    saturation = 120 - (route.dist / 7000 * 120);
+  }
   
+
+
   //initializes variables so that the airport with the larger x coordinate is stored in x2 and y2
   if(a1.getX() < a2.getX()){ 
     x1 = a1.getX();
@@ -135,7 +145,41 @@ void Graph::drawRoute(Routes& route, PNG& pic){
   for(int i = x1; i < x2; i++){ //iterates through all the pixels in the horizantal range of the line
     j = y1 + dy*(i - x1) / dx; //uses a form of the slope formula to calculate height/y-value of the pixel to be drawn on the map based on the x
     HSLAPixel & pixel = pic.getPixel(i, j); //accesses pixel
-    pixel = HSLAPixel(120,1,0.5,1); //changes pixel color to draw the line
+    pixel = HSLAPixel(saturation,1,0.5,1); //changes pixel color to draw the line
+  }
+  return;
+}
+
+void Graph::drawPath(std::vector<Airport> airports){
+  if(airports.size() > 1){
+  for(size_t i = 0; i < airports.size()-1;i++){ //iterates through vector and draws all the edges of the path
+    Airport& a1 = airports[i]; //gets the two airports
+    Airport& a2 = airports[i+1];
+    int x1,x2,y1,y2,dx,dy;
+  
+    //initializes variables so that the airport with the larger x coordinate is stored in x2 and y2
+    if(a1.getX() < a2.getX()){ 
+      x1 = a1.getX();
+      x2 = a2.getX();
+      y1 = a1.getY();
+      y2 = a2.getY();
+    }
+    else{
+      x1 = a2.getX();
+      x2 = a1.getX();
+      y1 = a2.getY();
+      y2 = a1.getY();
+    }
+
+    dx = x2 - x1; //calculates difference in x
+    dy = y2 - y1; //calculates difference in y
+    int j;
+    for(int i = x1; i < x2; i++){ //iterates through all the pixels in the horizantal range of the line
+      j = y1 + dy*(i - x1) / dx; //uses a form of the slope formula to calculate height/y-value of the pixel to be drawn on the map based on the x
+      HSLAPixel & pixel = map.getPixel(i, j); //accesses pixel
+      pixel = HSLAPixel(300,1,0.5,1); //changes pixel color to draw the line
+    }
+  }
   }
   return;
 }
@@ -183,7 +227,7 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
       HSLAPixel & pixel = pic.getPixel(i, j); //creates reference to pixel
       double distance = sqrt((x - i) * (x -i) + (y - j) * (y - j)); //calculates Euclidean distance from center
       if(distance < radius){ //if the distance is within the radius(size of airport), color that pixel
-        pixel = HSLAPixel(0,1,0.5,1);
+        pixel = HSLAPixel(240,1,0.5,1);
       }
     }
   }

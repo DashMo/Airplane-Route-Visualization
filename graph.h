@@ -13,8 +13,10 @@ class Graph {
 
     public:
         Graph(string airportinfo, string routesinfo, string mapname); //constructor takes file names for airport database, routes database, and mercator map image
-        PNG drawMap();
+        void drawMap();
+        PNG getMap();
         void drawRoute(Routes& route, PNG& pic);
+        void drawPath(std::vector<Airport>);
         void drawAirport(Airport& airport, PNG& pic);
         //~Graph();
         std::vector<Airport> findPath();
