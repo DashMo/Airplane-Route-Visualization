@@ -22,9 +22,12 @@ int main(int argc, char *argv[]){
     //     cout<<airport.getName()<<" -> ";
     // }
     // cout<<std::endl;
-    g.drawMap();
     g.drawPath(path);
     cs225::PNG pic = g.getMap();
+    pic.writeToFile("ShortestRoute.png");
+    g.drawMap();
+    g.drawPath(path);
+    pic = g.getMap();
     pic.writeToFile("TestMapV3.png");
     return 1;
 }

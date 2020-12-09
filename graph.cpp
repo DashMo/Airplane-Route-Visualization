@@ -233,6 +233,48 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
   }
 }
 
+
+
+std::vector<int> Graph::graphToFile(std::string& filename){ //uses a breadth first traversal to cover the entire graph and print all airports stored in the graph in the order they are traversed
+  std::vector<int> output;
+  std::vector<bool> visited(maxID + 1, false);
+  
+
+  for(size_t i = 0; i < visited.size();i++){ //loops through all airportIDs to make sure that BFS is called for parts of the graph that are disconnected from the rest
+    if(!visited[i])
+      BreadthFirstTraversal(visited, output, i); //calls bfs traversal on node i and passes in visited boolean array and the vector to store the output in
+  }
+
+  
+  for(auto airportID : output){
+
+  }
+
+  return output;
+}
+void Graph::BreadthFirstTraversal(std::vector<bool>& visited,std::vector<int>& path, int AirportID){
+  std::queue<int> q; //queue for bfs
+  int current;
+  if(airportMap.find(AirportID) != airportMap.end()){
+    q.push(AirportID);
+
+    while(!q.empty()){
+      current = q.front();
+      path.push_back(current);
+      q.pop();
+      if(routeList.find(current) != routeList.end()){
+        for(auto route : routeList.at(current)){
+          q.push(route.dest);
+          visited[route.dest] = true;
+        }
+      }
+    }
+  }
+}
+
+
+
+
 // BFSTraversal(start_node):
 //   visited := a set to store references to all visited nodes
 
