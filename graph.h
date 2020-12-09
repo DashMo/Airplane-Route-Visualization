@@ -27,7 +27,7 @@ class Graph {
         
         std::vector<Airport> BFS(Airport startNode, Airport endNode); //breadth first search that finds the shortest number of flights between two airports and returns the path
         std::vector<Airport> findPath(); //wrapper for BFS that accepts user input, will return shortest path (shortest number of flights)
-        std::vector<Airport> findPath(int start, int end); //wrapper for BFS that takes in two airport ID's and finds shortest path between them in terms of number of flights, mainly used or testing
+        std::vector<Airport> findPath(int start, int end); //wrapper for BFS that takes in two airport ID's and finds shortest path between them in terms of number of flights, mainly used for testing
 
     private:
         //edge holds name of airport and name of destination airport, graph implementations and traversals, adjacency list
