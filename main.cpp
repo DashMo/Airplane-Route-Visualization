@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
     // return 1;
     // std::ofstream myFile;
     // myFile.open ("newFile.txt");
-    std::string filename = "newFile.txt";
+    std::string filename = "third.txt";
     g.graphToFile(filename);
     // myFile.close();
     return 1;
