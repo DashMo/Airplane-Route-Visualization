@@ -12,7 +12,7 @@ The airports file is a .txt file that should contain information about each airp
 
 AirportID,"Airport Name","City","Country","IATA","ICAO",Latitude,Longitude,Altitude,TimeZone,"DST","Tz database time","type","source"
 
-Of this, the important fields are the Airport ID, Airport Name, City, Latitude, and Longitude. The remaining fields are not used by our code but should still be included (can just be nonsensical data) in order to follow the format of the OpenFlights Database we have used. The Airport ID's used should all be positive integers that are unique as they will be used as a key to identify the airports. Below is an example of 4 airports inputted with proper formatting:
+Of this, the important fields are the Airport ID, Airport Name, City, Latitude, and Longitude. The remaining fields are not used by our code but should still be included (can just be nonsensical data) in order to follow the format of the OpenFlights Database we have used. The Airport ID's used should all be positive integers that are unique as they will be used as a key to identify the airports. Below is an example of 4 airports inputted with proper formatting(Note: Each airport should take only one line but the readme file is wrapping the text):
 
 
 3077,"Hong Kong International Airport","Hong Kong","Hong Kong","HKG","VHHH",22.308901,113.915001,28,8,"U","Asia/Hong_Kong","airport","OurAirports"\
