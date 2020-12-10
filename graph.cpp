@@ -14,7 +14,7 @@ using cs225::HSLAPixel;
 using std::ifstream;
 
 Graph::Graph(string airportList, string routesList, string mapname){
-  
+  maxID = 1;
   map.readFromFile(mapname); //stores mercator map into graph class
   
   ///////////////FIRST SECTION - parse airportList file to create vertices of graph//////////////
@@ -244,22 +244,13 @@ std::vector<int> Graph::graphToFile(std::string& filename){ //uses a breadth fir
       BreadthFirstTraversal(visited, output, i); //calls bfs traversal on node i and passes in visited boolean array and the vector to store the output in
     }
   }
-  std::ofstream MyFile;
-  MyFile.open (filename);
-  std::cout<<"file should be open now"<<std::endl;
-  if (MyFile.is_open()) {
-    std::cout<<"file is open now"<<std::endl;
-    std::cout<< output[0] <<std::endl;
+  std::ofstream MyFile(filename);
+    cout<<output.size();
     for(int airportID : output){
-      std::cout<<"counter" << airportID <<std::endl;
-      MyFile << airportID << std::endl;
-      std::cout<<airportMap.at(airportID).getName()<<airportID<<std::endl;
+      MyFile<<airportMap.at(airportID).getName()<<" (" << airportID << ")"<<std::endl;
     }
-  } else {
-    std::cout<<"unable to open file";
-  }
   
-  // MyFile.flush();
+  
   MyFile.close();
 
   return output;
@@ -270,7 +261,7 @@ void Graph::BreadthFirstTraversal(std::vector<bool>& visited,std::vector<int>& p
   
   if(airportMap.find(AirportID) != airportMap.end()){
     q.push(AirportID);
-
+    visited[AirportID] = true;
     while(!q.empty()){
       current = q.front();
       path.push_back(current);
