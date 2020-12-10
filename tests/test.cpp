@@ -45,7 +45,7 @@ TEST_CASE("bfsUnconnected", "[valgrind][weight=1]")
     g.addAirport((double)65.5, (double)68.8,"fakeairport4", 3799,"fakecity4");
     g.addRoute(3077,3678);
     g.addRoute(3799,3093);
-    g.addRoute(3077,3093);
+    g.addRoute(3087,3098);
     g.addRoute(3093,507);
     int start = 3077;
     int end = 3093;

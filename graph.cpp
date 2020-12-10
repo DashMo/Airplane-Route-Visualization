@@ -244,10 +244,14 @@ std::vector<int> Graph::graphToFile(std::string& filename){ //uses a breadth fir
       BreadthFirstTraversal(visited, output, i); //calls bfs traversal on node i and passes in visited boolean array and the vector to store the output in
     }
   }
-  std::ofstream MyFile(filename);
-  // MyFile.open (filename);
+  std::ofstream MyFile;
+  MyFile.open (filename);
+  std::cout<<"file should be open now"<<std::endl;
   if (MyFile.is_open()) {
-    for(auto airportID : output){
+    std::cout<<"file is open now"<<std::endl;
+    std::cout<< output[0] <<std::endl;
+    for(int airportID : output){
+      std::cout<<"counter" << airportID <<std::endl;
       MyFile << airportID << std::endl;
       std::cout<<airportMap.at(airportID).getName()<<airportID<<std::endl;
     }
