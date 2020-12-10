@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
     g.drawMap(); //draws entire graph onto map
     g.drawPath(path); 
     pic = g.getMap(); //gets the map
-    pic.writeToFile("TestMapV4.png"); //writes the map png to this file 
+    pic.writeToFile("OutputMap.png"); //writes the map png to this file 
 
     std::string filename = "GraphAirportList.txt"; //uses Breadth First Traversal to cover all nodes and write them to this file
     g.graphToFile(filename);
