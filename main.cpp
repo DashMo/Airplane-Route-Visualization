@@ -1,5 +1,6 @@
 #include "graph.h"
 #include <iostream>
+#include <fstream>
 #include "cs225/PNG.h"
 using std::cout;
 //learned about input from terminal from GeeksForGeeks
@@ -29,5 +30,11 @@ int main(int argc, char *argv[]){
     g.drawPath(path);
     pic = g.getMap();
     pic.writeToFile("TestMapV3.png");
+    // return 1;
+    // std::ofstream myFile;
+    // myFile.open ("newFile.txt");
+    std::string filename = "newFile.txt";
+    g.graphToFile(filename);
+    // myFile.close();
     return 1;
 }
