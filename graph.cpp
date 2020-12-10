@@ -13,6 +13,7 @@ using std::endl;
 using cs225::HSLAPixel;
 using std::ifstream;
 
+//Graph Constructor, takes input files for airport and route information and creates graph structure
 Graph::Graph(string airportList, string routesList, string mapname){
   maxID = 1;
   map.readFromFile(mapname); //stores mercator map into graph class
@@ -70,7 +71,7 @@ Graph::Graph(string airportList, string routesList, string mapname){
 
 
 
-
+//helper function that adds routes(edges) to graph based on parsed file
 void Graph::addRoute(int start, int end){
   if(airportMap.find(start) != airportMap.end() && airportMap.find(end) != airportMap.end()){ //if the source and destination airports exist in the map, store the route
     Airport &begin = airportMap.at(start); //gets start and ending airports
@@ -82,7 +83,7 @@ void Graph::addRoute(int start, int end){
 }
 
 
-
+//helper function that adds airports(vertices) to graph based on parsed file
 void Graph::addAirport(double latitude, double longitude,std::string airportName, int airportID,std::string airportCity){
     cities[airportCity].push_back(airportID); //stores airportID within the correct city
     Airport airport(latitude,longitude,airportName, map.width(), map.height(),airportID); //creates airport object
@@ -93,7 +94,7 @@ void Graph::addAirport(double latitude, double longitude,std::string airportName
 
 
 
-
+//function that iterates through graph to project all the vertices and edges onto map
 void Graph::drawMap(){
   cout<<"Drawing Map..."<<endl;
   PNG & pic = map;
@@ -107,20 +108,22 @@ void Graph::drawMap(){
   cout<<"Finished Drawing Map"<<endl<<endl;
 }
 
+//simple getter function to return graph object's map
 PNG Graph::getMap(){
   return map;
 }
 
-
+//draws the edge between two airports onto the map
 void Graph::drawRoute(Routes& route, PNG& pic){
   Airport& a1 = airportMap.at(route.source); //gets the two airports
   Airport& a2 = airportMap.at(route.dest);
   int x1,x2,y1,y2,dx,dy;
   int saturation;
-  if(route.dist > 7000)
+  //calculate color of route edge based on its distance, ranges from green being the shortest distance to red being the largest distance
+  if(route.dist > 7000) 
     saturation = 0;
   else{
-    saturation = 120 - (route.dist / 7000 * 120);
+    saturation = 120 - (route.dist / 7000 * 120); //this calculation ensures that the distance is scaled to the range 0-120 which is the color range from red to green
   }
   
 
@@ -150,6 +153,7 @@ void Graph::drawRoute(Routes& route, PNG& pic){
   return;
 }
 
+//almost the same as drawRoute but is used to draw shortest path which uses a set color rather than color based on distance
 void Graph::drawPath(std::vector<Airport> airports){
   if(airports.size() > 1){
   for(size_t i = 0; i < airports.size()-1;i++){ //iterates through vector and draws all the edges of the path
@@ -177,7 +181,7 @@ void Graph::drawPath(std::vector<Airport> airports){
     for(int i = x1; i < x2; i++){ //iterates through all the pixels in the horizantal range of the line
       j = y1 + dy*(i - x1) / dx; //uses a form of the slope formula to calculate height/y-value of the pixel to be drawn on the map based on the x
       HSLAPixel & pixel = map.getPixel(i, j); //accesses pixel
-      pixel = HSLAPixel(300,1,0.5,1); //changes pixel color to draw the line
+      pixel = HSLAPixel(240,1,0.5,1); //changes pixel color to draw the line
     }
   }
   }
@@ -234,8 +238,8 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
 }
 
 
-
-std::vector<int> Graph::graphToFile(std::string& filename){ //uses a breadth first traversal to cover the entire graph and print all airports stored in the graph in the order they are traversed
+//uses a breadth first traversal to cover the entire graph and print all airports stored in the graph in the order they are traversed
+std::vector<int> Graph::graphToFile(std::string& filename){ 
   std::vector<int> output;
   std::vector<bool> visited(maxID + 1, false);
 
@@ -244,8 +248,9 @@ std::vector<int> Graph::graphToFile(std::string& filename){ //uses a breadth fir
       BreadthFirstTraversal(visited, output, i); //calls bfs traversal on node i and passes in visited boolean array and the vector to store the output in
     }
   }
+  //outputs Breadth First Traversal to file with the name and ID of each airport on a seperate line
   std::ofstream MyFile(filename);
-    cout<<output.size();
+    //cout<<output.size();
     for(int airportID : output){
       MyFile<<airportMap.at(airportID).getName()<<" (" << airportID << ")"<<std::endl;
     }
@@ -253,22 +258,24 @@ std::vector<int> Graph::graphToFile(std::string& filename){ //uses a breadth fir
   
   MyFile.close();
 
-  return output;
+  return output; //returns vector of airportID's traversed, mainly used for testing
 }
+
+//traversal to acess all airports(vertices) in the graph, stores the airportID's in the inputted path vector
 void Graph::BreadthFirstTraversal(std::vector<bool>& visited,std::vector<int>& path, int AirportID){
   std::queue<int> q; //queue for bfs
   int current;
   
-  if(airportMap.find(AirportID) != airportMap.end()){
-    q.push(AirportID);
-    visited[AirportID] = true;
-    while(!q.empty()){
-      current = q.front();
-      path.push_back(current);
+  if(airportMap.find(AirportID) != airportMap.end()){ //makes sure that the inputted vertice to start at actually exists
+    q.push(AirportID); //adds vertice to queue
+    visited[AirportID] = true; //marks airport as visited
+    while(!q.empty()){ //iterates until queue is empty
+      current = q.front(); //gets next airport from queue
+      path.push_back(current); //stores airport into vector 
       q.pop();
-      if(routeList.find(current) != routeList.end()){
-        for(auto route : routeList.at(current)){
-          if(!visited[route.dest])
+      if(routeList.find(current) != routeList.end()){ //iterates through the current airport's adjacency list
+        for(auto route : routeList.at(current)){ 
+          if(!visited[route.dest]) //if one of the adjacent airports hasnt yet been visited, adds it to the queue
             q.push(route.dest);
           //cout<<"CHECK 3"<<endl;
           visited[route.dest] = true;
@@ -278,27 +285,7 @@ void Graph::BreadthFirstTraversal(std::vector<bool>& visited,std::vector<int>& p
   }
 }
 
-
-
-
-// BFSTraversal(start_node):
-//   visited := a set to store references to all visited nodes
-
-//   queue := a queue to store references to nodes we should visit later
-//   queue.enqueue(start_node)
-//   visited.add(start_node)
-
-//   while queue is not empty:
-//     current_node := queue.dequeue()
-
-//     process current_node
-//     # for example, print(current_node.value)
-
-//     for neighbor in current_node.neighbors:
-//       if neighbor is not in visited:
-//         queue.enqueue(neighbor)
-//         visited.add(neighbor)
-
+//BFS that returns the path with the shortest number of flights between the starting and ending airport
 std::vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
 
   std::vector<Airport> path;
@@ -349,6 +336,7 @@ std::vector<Airport> Graph::BFS(Airport startNode, Airport endNode) {
 
 //wrapper that takes user input to call BFS to find shortest path
 std::vector<Airport> Graph::findPath(){
+  //get user input to find the start airport
   cout<<"Please enter your starting city: ";
   string city;
   std::getline(std::cin,city);
@@ -368,6 +356,7 @@ std::vector<Airport> Graph::findPath(){
   int airport = std::stoi(name);
   int start = airportList[airport];
 
+  //get user input to find second airport
   cout<<"Please enter your destination city: ";
   string city2;
   std::getline(std::cin,city2);
@@ -386,12 +375,13 @@ std::vector<Airport> Graph::findPath(){
   airport = std::stoi(name);
   int end = airportList[airport];
 
+  //calls BFS using the starting and ending airports
   std::vector<Airport> path = BFS(airportMap.at(start),airportMap.at(end));
   if(path.empty()){
-    cout<<"No routes were found"<<endl;
+    cout<<"No routes were found"<<endl; //returns empty vector if no paths were found to destination
     return path;
   }
-  cout<<"The shortest route has "<< path.size() - 1<< " flights."<<endl;
+  cout<<"The shortest route has "<< path.size() - 1<< " flights."<<endl; //otherwise outputs the shortest path and returns it as a vector as well
   cout<<"The route with the shortest number of flights is: ";
   for(size_t i = 0; i < path.size()-1; i++){
     cout<<path[i].getName()<<" -> ";
