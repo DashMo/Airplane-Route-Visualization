@@ -18,18 +18,18 @@ int main(int argc, char *argv[]){
     g.addRoute(3797,3093);
     g.addRoute(3077,3093);
     g.addRoute(3093,507);
-    std::vector<Airport> path = g.findPath();
+    //std::vector<Airport> path = g.findPath();
     // for(auto airport : g.findPath(3077,507)){
     //     cout<<airport.getName()<<" -> ";
     // }
     // cout<<std::endl;
-    g.drawPath(path);
-    cs225::PNG pic = g.getMap();
-    pic.writeToFile("ShortestRoute.png");
-    g.drawMap();
-    g.drawPath(path);
-    pic = g.getMap();
-    pic.writeToFile("TestMapV3.png");
+    // g.drawPath(path);
+    // cs225::PNG pic = g.getMap();
+    // pic.writeToFile("ShortestRoute.png");
+    // g.drawMap();
+    // g.drawPath(path);
+    // pic = g.getMap();
+    // pic.writeToFile("TestMapV3.png");
     // return 1;
     // std::ofstream myFile;
     // myFile.open ("newFile.txt");

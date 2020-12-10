@@ -1,3 +1,4 @@
+#Makefile is based on a combination of the one from lab_intro and the github demo repo for the final project
 EXENAME = main
 TEST = test
 OBJS = main.o PNG.o HSLAPixel.o lodepng.o routes.o airport.o graph.o
