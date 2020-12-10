@@ -246,9 +246,10 @@ std::vector<int> Graph::graphToFile(std::string& filename){ //uses a breadth fir
   }
 
   std::ofstream MyFile(filename);
-  
+  MyFile.open (filename);
   for(auto airportID : output){
     MyFile << airportID << std::endl;
+    std::cout<<airportMap.at(airportID).getName()<<airportID<<std::endl;
   }
   MyFile.close();
 
