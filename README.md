@@ -14,12 +14,12 @@ AirportID,"Airport Name","City","Country","IATA","ICAO",Latitude,Longitude,Altit
 
 Of this, the important fields are the Airport ID, Airport Name, City, Latitude, and Longitude. The remaining fields are not used by our code but should still be included (can just be nonsensical data) in order to follow the format of the OpenFlights Database we have used. The Airport ID's used should all be positive integers that are unique as they will be used as a key to identify the airports. Below is an example of 4 airports inputted with proper formatting:
 
-...
-3077,"Hong Kong International Airport","Hong Kong","Hong Kong","HKG","VHHH",22.308901,113.915001,28,8,"U","Asia/Hong_Kong","airport","OurAirports"
-3797,"John F Kennedy International Airport","New York","United States","JFK","KJFK",40.63980103,-73.77890015,13,-5,"A","America/New_York","airport","OurAirports"
-507,"London Heathrow Airport","London","United Kingdom","LHR","EGLL",51.4706,-0.461941,83,0,"E","Europe/London","airport","OurAirports"
+
+3077,"Hong Kong International Airport","Hong Kong","Hong Kong","HKG","VHHH",22.308901,113.915001,28,8,"U","Asia/Hong_Kong","airport","OurAirports"\
+3797,"John F Kennedy International Airport","New York","United States","JFK","KJFK",40.63980103,-73.77890015,13,-5,"A","America/New_York","airport","OurAirports"\
+507,"London Heathrow Airport","London","United Kingdom","LHR","EGLL",51.4706,-0.461941,83,0,"E","Europe/London","airport","OurAirports"\
 3093,"Indira Gandhi International Airport","Delhi","India","DEL","VIDP",28.5665,77.103104,777,5.5,"N","Asia/Calcutta","airport","OurAirports"
-...
+
 
 #### Routes File formatting
 The routes file is a .txt file that contains information about each route in a comma seperated list with each route on a seperate line. The format should be:
@@ -30,9 +30,9 @@ Only the SourceAirportID and DestinationAirportID are important to us but the ot
 
 An example of some correctly formatted routes is below:
 
-2B,410,KGD,2952,EGO,6156,,0,CR2
-2P,897,BSO,6019,MNL,2397,,0,DH4
-5Q,18232,AEP,2442,MVD,2816,,0,AT7
+2B,410,KGD,2952,EGO,6156,,0,CR2\
+2P,897,BSO,6019,MNL,2397,,0,DH4\
+5Q,18232,AEP,2442,MVD,2816,,0,AT7\
 9E,3976,JFK,3797,MSY,3861,,0,CR9
 
 ## Compiling and Running Program
