@@ -200,7 +200,7 @@ void Graph::drawAirport(Airport& airport, PNG& pic){
     return;
   }
 
-  double radius = log(airport.getSize()) + 1; //the radius of the airport increases logarithmically based on the number of incoming flights to it; it is a logarathmic increase so that a massive airport doesnt just cover the map
+  double radius = 0.5 * log(airport.getSize()) + 2; //the radius of the airport increases logarithmically based on the number of incoming flights to it; it is a logarathmic increase so that a massive airport doesnt just cover the map
 
   //series of if-else statements calculate the range of pixels in the PNG to iterate through, this allows us to not have to iterate through the whole PNG for each vertex drawn
   unsigned leftbound,rightbound,upperbound,lowerbound;
