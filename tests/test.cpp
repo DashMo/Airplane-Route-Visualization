@@ -3,11 +3,13 @@
 #include "../graph.h"
 #include "../cs225/PNG.h"
 #include <algorithm>
+#include <cmath>
 // #include "../edge.h"
 // #include "../NetworkFlow.h"
-
+#include "../cs225/HSLAPixel.h"
 #include <iostream>
 
+using cs225::HSLAPixel;
 TEST_CASE("Breadth First Traversal covers all nodes of connected graph", "[valgrind][weight=1]") {
     Graph g("fakefile", "fakefile2", "MercatorMap.png"); 
     g.addAirport((double)15.5, (double)18.8,"airport1", 1,"city1");
@@ -148,3 +150,47 @@ TEST_CASE("BFS should only find path if routes are in the correct direction", "[
 }
 
 
+TEST_CASE("map projection test", "[valgrind][weight=1]")
+{
+	Graph g("fakefile", "fakefile2", "MercatorMap.png"); 
+    g.addAirport((double)15.5, (double)18.8,"airport1", 1,"city1");
+    g.addAirport((double)25.5, (double)28.8,"airport2", 2,"city2");
+    g.addAirport((double)35.5, (double)38.8,"airport3", 3,"city3");
+    g.addAirport((double)45.5, (double)48.8,"airport4", 4,"city4");
+    g.addAirport((double)55.5, (double)58.8,"airport5", 5,"city5");
+    g.addAirport((double)65.5, (double)68.8,"airport6", 6,"city6");
+    //multiple paths to airport 6 from 1
+    g.addRoute(1,2);
+    g.addRoute(2,3);
+    g.addRoute(3,4);
+    g.addRoute(4,1);
+    g.addRoute(4,5);
+    g.addRoute(5,6);
+    g.addRoute(2,4);
+
+
+    int start = 1;
+    int end = 6;
+    std::vector<Airport> path = g.findPath(start, end);
+
+    g.drawPath(path); //draws path onto map
+    cs225::PNG pic = g.getMap();
+    g.drawMap(); //draws entire graph onto map
+    g.drawPath(path); 
+    pic = g.getMap(); //gets the map
+    
+    double lon = 18.8;
+    double lat = 15.5;
+    double x = fmod((pic.width()*(180+lon)/360), (pic.width() +(pic.width()/2)));
+    int width = pic.width();
+    double PI = 3.14159265359;
+    double latRad = lat*PI/180;
+
+    // get y value
+    double mercN = log(tan((PI/4)+(latRad/2)));
+    double y = (pic.height()/2)-(width*mercN/(2*PI));
+    
+    HSLAPixel & pixel = pic.getPixel(x, y);
+    double expectedHue = 240;
+    REQUIRE(pixel.h == expectedHue);
+}
