@@ -1,5 +1,12 @@
-# tejp2-jcrowe6-mahuja3-ajithks2
-# Final Project
+# Airport Route Visualization
+###Contributers: Mohit Ahuja, Ajith Senthil
+
+#Overview
+The goal of this project is to create a visualization of all the airports and flight routes from the OpenFlights database. The final product creates a graph structure and projects all of the routes and airport information onto a map and is capable of providing the shortest number of flights to traverse from one city to another. The routes displayed on the map progressively shift from green to red the longer the flight is and the size of airports on the map increases logarithmically with the number of incoming routes (in order to visually show the popularity of airports). 
+
+###Credit
+This project is a collaberation between Mohit Ahuja and Ajith Senthil for our CS 225 final project. All code was written from scratch except for the files in the 'cs225' folder, which were provided by the course staff.
+
 Final Project Video on Github as "Cs225FinalProjectPresentation.mp4"
 ## Where to Get Data
 The database we utilized is the OpenFlights database. We used their Airports database and Routes database to create the graph. These two files are included in this github repository as "airports.dat.txt" and "routes.dat.txt".
